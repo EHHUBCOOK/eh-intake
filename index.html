@@ -326,7 +326,13 @@
       referral: document.getElementById('eh-referral').value,
       notes: document.getElementById('eh-notes').value
     };
-    fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).catch(function(){});
+    // Use URL params + GET to bypass CORS/CSP restrictions in iframes
+    var params = Object.keys(data).map(function(k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
+    }).join('&');
+    var img = new Image();
+    img.src = SHEET_URL + '?' + params;
+
     document.getElementById('eh-intake-form').style.display = 'none';
     document.querySelector('.page-intro').style.display = 'none';
     document.getElementById('eh-thankyou').style.display = 'block';
