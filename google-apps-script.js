@@ -9,11 +9,12 @@
  * 3. Copy the deployment URL → paste into index.html as SHEET_URL
  */
 
+var SPREADSHEET_ID = '1UVtCQgUDThTd-BdCs5XyZx-AYeciiin1CCB5oOUD0pY';
 var SHEET_NAME = 'EH LEADS';
 
 function doPost(e) {
   try {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     var sheet = ss.getSheetByName(SHEET_NAME);
 
     // Create sheet + header row if it doesn't exist yet
