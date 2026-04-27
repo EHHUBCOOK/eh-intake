@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book an Event — Essential Herbs</title>
+  <style>
+    html, body { background: #f5f2ec; margin: 0; padding: 0; }
+    body { max-width: 680px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+    .eh-wordmark {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #1a1a1a;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <a class="eh-wordmark" href="https://essentialherbs.com">Essential Herbs</a>
+<!-- Essential Herbs Intake Form — Shopify Embed v6 -->
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f2ec; --text: #1a1a1a; --muted: #888; --border: #c8c4bc;
+      --font: 'Times New Roman', Times, serif; --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .page-intro { margin-bottom: 2.4rem; }
+    .page-intro h1 { font-family: var(--font); font-size: 2rem; font-weight: 400; font-style: italic; line-height: 1.2; margin-bottom: 0.7rem; }
+    .page-intro p { font-family: var(--sans); font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
+    .eh-section { display: none; animation: ehFadeIn 0.3s ease; }
+    .eh-section.active { display: block; }
+    @keyframes ehFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .section-label { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.4rem; }
+    .eh-field { margin-bottom: 1.4rem; }
+    .eh-field label { display: block; font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
+    .eh-field input[type="text"], .eh-field input[type="email"], .eh-field input[type="tel"],
+    .eh-field input[type="date"], .eh-field input[type="number"], .eh-field textarea, .eh-field select {
+      width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border);
+      padding: 0.35rem 0; font-family: var(--font); font-size: 1.05rem; color: var(--text);
+      outline: none; transition: border-color 0.2s; border-radius: 0; -webkit-appearance: none;
+    }
+    .eh-field input:focus, .eh-field textarea:focus { border-bottom-color: var(--text); }
+    .eh-field textarea { resize: none; min-height: 70px; line-height: 1.6; }
+    .pill-group { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.3rem; }
+    .eh-pill input[type="radio"], .eh-pill input[type="checkbox"] { display: none; }
+    .eh-pill label { display: inline-block; padding: 0.4rem 1rem; border: 1px solid var(--border); font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background 0.15s, color 0.15s; margin: 0; color: var(--muted); }
+    .eh-pill input:checked + label { background: var(--text); color: var(--bg); border-color: var(--text); }
+    .eh-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 2.1rem; }
+    .eh-btn-next, .eh-btn-submit { font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; background: var(--text); color: var(--bg); border: none; padding: 0.85rem 2rem; cursor: pointer; transition: opacity 0.15s; }
+    .eh-btn-next:hover, .eh-btn-submit:hover { opacity: 0.75; }
+    .eh-btn-back { font-family: var(--sans); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: none; border: none; cursor: pointer; padding: 0; }
+    .eh-btn-back:hover { color: var(--text); }
+    .eh-progress { display: flex; gap: 0.3rem; margin-bottom: 2.1rem; }
+    .eh-dot { width: 20px; height: 2px; background: var(--border); transition: background 0.2s; }
+    .eh-dot.done { background: var(--text); }
+    #eh-thankyou { display: none; text-align: center; padding: 3rem 0; }
+    #eh-thankyou h2 { font-family: var(--font); font-size: 2rem; font-weight: 400; font-style: italic; margin-bottom: 1rem; }
+    #eh-thankyou p { font-family: var(--sans); font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
+    .eh-field-error input, .eh-field-error textarea { border-bottom-color: #c0392b; }
+    .eh-error-msg { font-family: var(--sans); font-size: 0.67rem; color: #c0392b; letter-spacing: 0.04em; margin-top: 0.35rem; display: none; }
+    .eh-field-error .eh-error-msg { display: block; }
+    .venue-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .venue-row input { flex: 1; min-width: 180px; }
+</style>
+
+<div id="eh-form-wrapper">
+  <div class="page-intro">
+    <h1>Let's work together.</h1>
+    <p>Tell us about your event. We respond within 48 hours.</p>
+  </div>
+
+  <form id="eh-intake-form" novalidate>
+    <div class="eh-progress" id="eh-progress">
+      <div class="eh-dot done" id="eh-dot-0"></div>
+      <div class="eh-dot" id="eh-dot-1"></div>
+      <div class="eh-dot" id="eh-dot-2"></div>
+      <div class="eh-dot" id="eh-dot-3"></div>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="eh-section active" id="eh-section-0">
+      <p class="section-label">01 / 04 — you</p>
+      <div class="eh-field">
+        <label for="eh-name">Full Name *</label>
+        <input type="text" id="eh-name" name="name" placeholder="Your name" />
+        <span class="eh-error-msg">This field is required.</span>
+      </div>
+      <div class="eh-field">
+        <label for="eh-email">Email *</label>
+        <input type="email" id="eh-email" name="email" placeholder="your@email.com" />
+        <span class="eh-error-msg">Please enter a valid email.</span>
+      </div>
+      <div class="eh-field">
+        <label for="eh-phone">Phone</label>
+        <input type="tel" id="eh-phone" name="phone" placeholder="(212) 555-0100" />
+      </div>
+      <div class="eh-actions">
+        <span></span>
+        <button type="button" class="eh-btn-next" id="eh-next-0">Continue →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="eh-section" id="eh-section-1">
+      <p class="section-label">02 / 04 — the event</p>
+      <div class="eh-field">
+        <label>Event Type</label>
+        <div class="pill-group">
+          <span class="eh-pill"><input type="radio" name="event_type" id="et1" value="Wedding"><label for="et1">Wedding</label></span>
+          <span class="eh-pill"><input type="radio" name="event_type" id="et2" value="Private Dinner"><label for="et2">Private Dinner</label></span>
+          <span class="eh-pill"><input type="radio" name="event_type" id="et3" value="Corporate"><label for="et3">Corporate</label></span>
+          <span class="eh-pill"><input type="radio" name="event_type" id="et4" value="Housewarming"><label for="et4">Housewarming</label></span>
+          <span class="eh-pill"><input type="radio" name="event_type" id="et5" value="Brand Activation"><label for="et5">Brand Activation</label></span>
+          <span class="eh-pill"><input type="radio" name="event_type" id="et6" value="Other"><label for="et6">Other</label></span>
+        </div>
+      </div>
+      <div class="eh-field">
+        <label for="eh-event-date">Event Date</label>
+        <input type="date" id="eh-event-date" name="event_date" />
+        <span class="eh-error-msg">Please enter a date.</span>
+      </div>
+      <div class="eh-field">
+        <label for="eh-guest-count">Approximate Guest Count</label>
+        <input type="number" id="eh-guest-count" name="guest_count" placeholder="e.g. 50" min="1" />
+        <span class="eh-error-msg">Please enter a guest count.</span>
+      </div>
+      <div class="eh-field">
+        <label>Venue / Location</label>
+        <div class="venue-row">
+          <input type="text" id="eh-venue" name="venue" placeholder="Name and address if known" />
+          <span class="eh-pill"><input type="checkbox" id="venue_help" name="venue_help" value="Looking for venue support"><label for="venue_help">Looking for venue support</label></span>
+        </div>
+      </div>
+      <div class="eh-actions">
+        <button type="button" class="eh-btn-back" id="eh-back-1">← Back</button>
+        <button type="button" class="eh-btn-next" id="eh-next-1">Continue →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="eh-section" id="eh-section-2">
+      <p class="section-label">03 / 04 — the food</p>
+      <div class="eh-field">
+        <label>Service Style <span style="font-size:0.65rem;text-transform:none;color:var(--muted);">(select all that apply)</span></label>
+        <div class="pill-group">
+          <span class="eh-pill"><input type="checkbox" name="service_style" id="ss1" value="Grazing Table"><label for="ss1">Grazing Table</label></span>
+          <span class="eh-pill"><input type="checkbox" name="service_style" id="ss2" value="Passed Bites"><label for="ss2">Passed Bites</label></span>
+          <span class="eh-pill"><input type="checkbox" name="service_style" id="ss3" value="Seated Dinner"><label for="ss3">Seated Dinner</label></span>
+          <span class="eh-pill"><input type="checkbox" name="service_style" id="ss4" value="Coursed Dinner"><label for="ss4">Coursed Dinner</label></span>
+          <span class="eh-pill"><input type="checkbox" name="service_style" id="ss5" value="Buffet"><label for="ss5">Buffet</label></span>
+          <span class="eh-pill"><input type="checkbox" name="service_style" id="ss7" value="Family Style"><label for="ss7">Family Style</label></span>
+          <span class="eh-pill"><input type="checkbox" name="service_style" id="ss6" value="Not Sure"><label for="ss6">Not Sure</label></span>
+        </div>
+        <span class="eh-error-msg" id="eh-style-error">Please select at least one.</span>
+      </div>
+      <div class="eh-field">
+        <label for="eh-food-notes">Food Direction / Style Notes</label>
+        <textarea id="eh-food-notes" name="food_notes" placeholder="Seasonal, Mediterranean, plant-forward..."></textarea>
+      </div>
+      <div class="eh-field">
+        <label>Dietary Restrictions <span style="font-size:0.65rem;text-transform:none;color:var(--muted);">(select all that apply)</span></label>
+        <div class="pill-group">
+          <span class="eh-pill"><input type="checkbox" name="dietary" id="d1" value="Vegetarian"><label for="d1">Vegetarian</label></span>
+          <span class="eh-pill"><input type="checkbox" name="dietary" id="d2" value="Vegan"><label for="d2">Vegan</label></span>
+          <span class="eh-pill"><input type="checkbox" name="dietary" id="d3" value="Gluten-Free"><label for="d3">Gluten-Free</label></span>
+          <span class="eh-pill"><input type="checkbox" name="dietary" id="d4" value="Nut Allergy"><label for="d4">Nut Allergy</label></span>
+          <span class="eh-pill"><input type="checkbox" name="dietary" id="d5" value="Dairy-Free"><label for="d5">Dairy-Free</label></span>
+          <span class="eh-pill"><input type="checkbox" name="dietary" id="d6" value="Halal"><label for="d6">Halal</label></span>
+          <span class="eh-pill"><input type="checkbox" name="dietary" id="d7" value="Kosher"><label for="d7">Kosher</label></span>
+        </div>
+        <input type="text" name="dietary_other" placeholder="Other — please specify" style="margin-top:0.9rem;width:100%;background:transparent;border:none;border-bottom:1px solid var(--border);padding:0.35rem 0;font-family:var(--font);font-size:1.05rem;outline:none;" />
+      </div>
+      <div class="eh-field">
+        <label>Beverage Program <span style="font-size:0.65rem;text-transform:none;color:var(--muted);">(select all that apply)</span></label>
+        <div class="pill-group">
+          <span class="eh-pill"><input type="checkbox" name="beverage" id="bev1" value="Full Bar"><label for="bev1">Full Bar</label></span>
+          <span class="eh-pill"><input type="checkbox" name="beverage" id="bev2" value="Specialty Cocktails"><label for="bev2">Specialty Cocktails</label></span>
+          <span class="eh-pill"><input type="checkbox" name="beverage" id="bev3" value="Beer + Wine"><label for="bev3">Beer + Wine</label></span>
+          <span class="eh-pill"><input type="checkbox" name="beverage" id="bev4" value="Still Planning"><label for="bev4">Still Planning</label></span>
+        </div>
+      </div>
+      <div class="eh-actions">
+        <button type="button" class="eh-btn-back" id="eh-back-2">← Back</button>
+        <button type="button" class="eh-btn-next" id="eh-next-2">Continue →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="eh-section" id="eh-section-3">
+      <p class="section-label">04 / 04 — final details</p>
+      <div class="eh-field">
+        <label>Catering Budget Range (before tax &amp; gratuity)</label>
+        <div class="pill-group">
+          <span class="eh-pill"><input type="radio" name="budget" id="b1" value="Under $5,000"><label for="b1">Under $5K</label></span>
+          <span class="eh-pill"><input type="radio" name="budget" id="b2" value="$5,000–$15,000"><label for="b2">$5K–$15K</label></span>
+          <span class="eh-pill"><input type="radio" name="budget" id="b3" value="$15,000–$30,000"><label for="b3">$15K–$30K</label></span>
+          <span class="eh-pill"><input type="radio" name="budget" id="b4" value="$30,000+"><label for="b4">$30K+</label></span>
+          <span class="eh-pill"><input type="radio" name="budget" id="b5" value="Not sure yet"><label for="b5">Not sure yet</label></span>
+        </div>
+      </div>
+      <div class="eh-field">
+        <label>Beverage Budget Range</label>
+        <div class="pill-group">
+          <span class="eh-pill"><input type="radio" name="beverage_budget" id="bb1" value="Under $2,000"><label for="bb1">Under $2K</label></span>
+          <span class="eh-pill"><input type="radio" name="beverage_budget" id="bb2" value="$2,000–$5,000"><label for="bb2">$2K–$5K</label></span>
+          <span class="eh-pill"><input type="radio" name="beverage_budget" id="bb3" value="$5,000–$10,000"><label for="bb3">$5K–$10K</label></span>
+          <span class="eh-pill"><input type="radio" name="beverage_budget" id="bb4" value="$10,000+"><label for="bb4">$10K+</label></span>
+          <span class="eh-pill"><input type="radio" name="beverage_budget" id="bb5" value="Not sure yet"><label for="bb5">Not sure yet</label></span>
+        </div>
+      </div>
+      <div class="eh-field">
+        <label>How soon do you need a response?</label>
+        <div class="pill-group">
+          <span class="eh-pill"><input type="radio" name="timeline" id="t1" value="Within 24 hours"><label for="t1">Within 24 hrs</label></span>
+          <span class="eh-pill"><input type="radio" name="timeline" id="t2" value="Within a week"><label for="t2">Within a week</label></span>
+          <span class="eh-pill"><input type="radio" name="timeline" id="t3" value="No rush"><label for="t3">No rush</label></span>
+        </div>
+      </div>
+      <div class="eh-field">
+        <label>Other Services Needed <span style="font-size:0.65rem;text-transform:none;color:var(--muted);">(optional)</span></label>
+        <div class="pill-group">
+          <span class="eh-pill"><input type="checkbox" name="other_services" id="os1" value="Event Planner"><label for="os1">Event Planner</label></span>
+          <span class="eh-pill"><input type="checkbox" name="other_services" id="os2" value="Floral Design"><label for="os2">Floral</label></span>
+          <span class="eh-pill"><input type="checkbox" name="other_services" id="os3" value="Photography"><label for="os3">Photography</label></span>
+          <span class="eh-pill"><input type="checkbox" name="other_services" id="os4" value="DJ / Music"><label for="os4">DJ / Music</label></span>
+          <span class="eh-pill"><input type="checkbox" name="other_services" id="os5" value="Videography"><label for="os5">Videography</label></span>
+          <span class="eh-pill"><input type="checkbox" name="other_services" id="os6" value="Rentals"><label for="os6">Rentals</label></span>
+          <span class="eh-pill"><input type="checkbox" name="other_services" id="os7" value="Lighting"><label for="os7">Lighting</label></span>
+        </div>
+      </div>
+      <div class="eh-field">
+        <label for="eh-referral">How did you hear about us?</label>
+        <input type="text" id="eh-referral" name="referral" placeholder="Referral, Instagram, press, etc." />
+      </div>
+      <div class="eh-field">
+        <label for="eh-notes">Anything else you'd like us to know?</label>
+        <textarea id="eh-notes" name="notes" placeholder="Share anything that helps us understand your vision."></textarea>
+      </div>
+      <div class="eh-actions">
+        <button type="button" class="eh-btn-back" id="eh-back-3">← Back</button>
+        <button type="submit" class="eh-btn-submit" id="eh-submit">Submit Inquiry</button>
+      </div>
+    </div>
+  </form>
+
+  <div id="eh-thankyou">
+    <h2>Thank you.</h2>
+    <p>We'll be in touch within 48 hours.<br/>For an immediate response: <a href="mailto:hello@essentialherbs.com" style="color:inherit;">hello@essentialherbs.com</a></p>
+  </div>
+</div>
+
+<!-- Script placed AFTER HTML so DOM is guaranteed ready -->
+<script>
+(function() {
+  var SHEET_URL = 'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
+  var current = 0;
+
+  function goTo(n) {
+    if (n > current && !validate(current)) return;
+    document.getElementById('eh-section-' + current).classList.remove('active');
+    document.getElementById('eh-dot-' + current).classList.remove('done');
+    current = n;
+    document.getElementById('eh-section-' + current).classList.add('active');
+    for (var i = 0; i <= current; i++) {
+      document.getElementById('eh-dot-' + i).classList.add('done');
+    }
+    // Hide intro after page 1
+    var intro = document.querySelector('.page-intro');
+    if (intro) intro.style.display = n > 0 ? 'none' : 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function validate(s) {
+    if (s === 0) {
+      var ok = true;
+      var n = document.getElementById('eh-name');
+      var em = document.getElementById('eh-email');
+      if (!n.value.trim()) { n.closest('.eh-field').classList.add('eh-field-error'); ok = false; }
+      else { n.closest('.eh-field').classList.remove('eh-field-error'); }
+      if (!em.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value.trim())) {
+        em.closest('.eh-field').classList.add('eh-field-error'); ok = false;
+      } else { em.closest('.eh-field').classList.remove('eh-field-error'); }
+      return ok;
+    }
+    if (s === 1) {
+      var ok = true;
+      var d = document.getElementById('eh-event-date');
+      var g = document.getElementById('eh-guest-count');
+      if (!d.value) { d.closest('.eh-field').classList.add('eh-field-error'); ok = false; }
+      else { d.closest('.eh-field').classList.remove('eh-field-error'); }
+      if (!g.value) { g.closest('.eh-field').classList.add('eh-field-error'); ok = false; }
+      else { g.closest('.eh-field').classList.remove('eh-field-error'); }
+      return ok;
+    }
+    if (s === 2) {
+      var checked = document.querySelectorAll('input[name="service_style"]:checked');
+      var err = document.getElementById('eh-style-error');
+      if (checked.length === 0) { err.style.display = 'block'; return false; }
+      err.style.display = 'none'; return true;
+    }
+    return true;
+  }
+
+  function getMultiVal(name) {
+    var vals = [];
+    document.querySelectorAll('input[name="' + name + '"]:checked').forEach(function(el) { vals.push(el.value); });
+    return vals.join(', ');
+  }
+
+  function submitForm(e) {
+    e.preventDefault();
+    var data = {
+      timestamp: new Date().toISOString(),
+      name: document.getElementById('eh-name').value,
+      email: document.getElementById('eh-email').value,
+      phone: document.getElementById('eh-phone').value,
+      event_type: getMultiVal('event_type'),
+      event_date: document.getElementById('eh-event-date').value,
+      guest_count: document.getElementById('eh-guest-count').value,
+      venue: document.getElementById('eh-venue').value,
+      venue_help: getMultiVal('venue_help'),
+      service_style: getMultiVal('service_style'),
+      food_notes: document.getElementById('eh-food-notes').value,
+      dietary: getMultiVal('dietary'),
+      dietary_other: document.querySelector('input[name="dietary_other"]').value,
+      beverage: getMultiVal('beverage'),
+      budget: getMultiVal('budget'),
+      beverage_budget: getMultiVal('beverage_budget'),
+      timeline: getMultiVal('timeline'),
+      other_services: getMultiVal('other_services'),
+      referral: document.getElementById('eh-referral').value,
+      notes: document.getElementById('eh-notes').value
+    };
+    fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).catch(function(){});
+    document.getElementById('eh-intake-form').style.display = 'none';
+    document.querySelector('.page-intro').style.display = 'none';
+    document.getElementById('eh-thankyou').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  var ehInited = false;
+  function init() {
+    if (ehInited) return;
+    var n0 = document.getElementById('eh-next-0');
+    var form = document.getElementById('eh-intake-form');
+    if (!n0 || !form) { setTimeout(init, 100); return; }
+    ehInited = true;
+
+    document.getElementById('eh-next-0').addEventListener('click', function() { goTo(1); });
+    document.getElementById('eh-next-1').addEventListener('click', function() { goTo(2); });
+    document.getElementById('eh-next-2').addEventListener('click', function() { goTo(3); });
+    document.getElementById('eh-back-1').addEventListener('click', function() { goTo(0); });
+    document.getElementById('eh-back-2').addEventListener('click', function() { goTo(1); });
+    document.getElementById('eh-back-3').addEventListener('click', function() { goTo(2); });
+    form.addEventListener('submit', submitForm);
+  }
+
+  // Multiple init attempts to survive Shopify's async theme loading
+  init();
+  setTimeout(init, 100);
+  setTimeout(init, 500);
+  setTimeout(init, 1000);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  }
+  window.addEventListener('load', init);
+})();
+</script>
+</body></html>
