@@ -1,90 +1,195 @@
 /**
  * EH LEADS — Google Apps Script Web App
- * Deploy as: Execute as ME / Anyone (even anonymous) can access
+ * Handles form submissions: logs to sheet, sends email, creates Drive folder structure
  *
- * 1. Go to script.google.com → New project → paste this code
- * 2. Deploy → New deployment → Web app
- *    - Execute as: Me
- *    - Who has access: Anyone
- * 3. Copy the deployment URL → paste into index.html as SHEET_URL
+ * Deploy as: Execute as Me / Anyone can access
  */
 
 var SPREADSHEET_ID = '1UVtCQgUDThTd-BdCs5XyZx-AYeciiin1CCB5oOUD0pY';
 var SHEET_NAME = 'EH LEADS';
+var NOTIFY_EMAILS = ['russell@essentialherbs.com', 'loft12376@gmail.com'];
+var EH_PROJECTS_FOLDER_ID = '12g6T9m_qIAF9_dH3SEEOsylXLhcJ3W-7';
+var BUDGET_TEMPLATE_ID = '1st36Td2kf-L2-5qEQASNFN4gDRkDgTMmIvRiMayNXgM';
 
-function doPost(e) {
+function doGet(e) {
   try {
-    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    var sheet = ss.getSheetByName(SHEET_NAME);
+    var p = e.parameter;
 
-    // Create sheet + header row if it doesn't exist yet
-    if (!sheet) {
-      sheet = ss.insertSheet(SHEET_NAME);
-      sheet.appendRow([
-        'Timestamp',
-        'Name',
-        'Email',
-        'Phone',
-        'Event Type',
-        'Event Date',
-        'Guest Count',
-        'Venue',
-        'Venue Help',
-        'Service Style',
-        'Food Notes',
-        'Dietary',
-        'Dietary Other',
-        'Beverage',
-        'Budget',
-        'Beverage Budget',
-        'Timeline',
-        'Other Services',
-        'Referral',
-        'Notes'
-      ]);
-      // Freeze header row
-      sheet.setFrozenRows(1);
+    // Health check (no name/email = ping)
+    if (!p.name && !p.email) {
+      return ContentService.createTextOutput(JSON.stringify({status:'live'})).setMimeType(ContentService.MimeType.JSON);
     }
 
-    var data = JSON.parse(e.postData.contents);
-
+    // 1. Log to sheet
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_NAME);
     sheet.appendRow([
-      data.timestamp || new Date().toISOString(),
-      data.name || '',
-      data.email || '',
-      data.phone || '',
-      data.event_type || '',
-      data.event_date || '',
-      data.guest_count || '',
-      data.venue || '',
-      data.venue_help || '',
-      data.service_style || '',
-      data.food_notes || '',
-      data.dietary || '',
-      data.dietary_other || '',
-      data.beverage || '',
-      data.budget || '',
-      data.beverage_budget || '',
-      data.timeline || '',
-      data.other_services || '',
-      data.referral || '',
-      data.notes || ''
+      p.timestamp || new Date().toISOString(),
+      p.name || '', p.email || '', p.phone || '',
+      p.event_type || '', p.event_date || '', p.guest_count || '',
+      p.venue || '', p.venue_help || '', p.service_style || '',
+      p.food_notes || '', p.dietary || '', p.dietary_other || '',
+      p.beverage || '', p.budget || '', p.beverage_budget || '',
+      p.timeline || '', p.other_services || '', p.referral || '', p.notes || ''
     ]);
 
-    return ContentService
-      .createTextOutput(JSON.stringify({ status: 'ok' }))
-      .setMimeType(ContentService.MimeType.JSON);
+    // 2. Build folder name: MM.DD.YYYY MONTH - Client Name (Event Type)
+    var folderName = buildFolderName(p);
 
-  } catch (err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ status: 'error', message: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
+    // 3. Create Drive folder structure
+    var folderUrl = createFolderStructure(folderName, p);
+
+    // 4. Send email notification
+    var subject = 'New EH Inquiry: ' + (p.name || 'Unknown') + ' — ' + (p.event_type || 'Event');
+    var body = 'New inquiry submitted via essentialherbs.com\n\n'
+      + 'Name: ' + (p.name||'') + '\n'
+      + 'Email: ' + (p.email||'') + '\n'
+      + 'Phone: ' + (p.phone||'') + '\n'
+      + 'Event Type: ' + (p.event_type||'') + '\n'
+      + 'Event Date: ' + (p.event_date||'') + '\n'
+      + 'Guest Count: ' + (p.guest_count||'') + '\n'
+      + 'Venue: ' + (p.venue||'') + '\n'
+      + 'Service Style: ' + (p.service_style||'') + '\n'
+      + 'Dietary: ' + (p.dietary||'') + '\n'
+      + 'Budget: ' + (p.budget||'') + '\n'
+      + 'Timeline: ' + (p.timeline||'') + '\n'
+      + 'Referral: ' + (p.referral||'') + '\n'
+      + 'Notes: ' + (p.notes||'') + '\n\n'
+      + 'Drive Folder: ' + folderUrl + '\n'
+      + 'All Leads: https://docs.google.com/spreadsheets/d/' + SPREADSHEET_ID;
+
+    MailApp.sendEmail(NOTIFY_EMAILS.join(','), subject, body);
+
+    return ContentService.createTextOutput('ok').setMimeType(ContentService.MimeType.TEXT);
+
+  } catch(err) {
+    // Still return ok to the form — don't break the thank you screen
+    Logger.log('Error: ' + err.toString());
+    return ContentService.createTextOutput('ok').setMimeType(ContentService.MimeType.TEXT);
   }
 }
 
-// Test via GET (optional — for verifying deployment is live)
-function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({ status: 'live', sheet: SHEET_NAME }))
-    .setMimeType(ContentService.MimeType.JSON);
+function doPost(e) { return doGet(e); }
+
+// ── Build folder name ─────────────────────────────────────────────────────────
+function buildFolderName(p) {
+  var date = p.event_date || '';
+  var mm = '', dd = '', yyyy = '', monthName = '';
+  var months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+  if (date) {
+    var parts = date.split('-');
+    if (parts.length === 3) {
+      yyyy = parts[0];
+      mm = parts[1].replace(/^0/, '');
+      dd = parts[2].replace(/^0/, '');
+      monthName = months[parseInt(parts[1]) - 1] || '';
+    }
+  }
+
+  var clientName = (p.name || 'Inquiry').split(' ').slice(0,2).join(' ');
+  var eventType = p.event_type || 'Event';
+
+  if (mm && dd && yyyy) {
+    return mm + '.' + dd + '.' + yyyy + ' ' + monthName + ' - ' + clientName + ' ' + eventType;
+  } else {
+    // No date — use today
+    var now = new Date();
+    var m = now.getMonth();
+    return (m+1) + '.' + now.getDate() + '.' + now.getFullYear() + ' ' + months[m] + ' - ' + clientName + ' ' + eventType;
+  }
+}
+
+// ── Create folder structure ───────────────────────────────────────────────────
+function createFolderStructure(folderName, p) {
+  var drive = DriveApp;
+
+  // Event folder inside EH — Projects
+  var projectsFolder = drive.getFolderById(EH_PROJECTS_FOLDER_ID);
+  var eventFolder = projectsFolder.createFolder(folderName);
+
+  // PRE-APPROVAL subfolder
+  var preApprovalFolder = eventFolder.createFolder('PRE-APPROVAL');
+
+  // Overview Google Doc
+  createOverviewDoc(preApprovalFolder, folderName, p);
+
+  // Budget Sheet (copy from template)
+  try {
+    var templateFile = drive.getFileById(BUDGET_TEMPLATE_ID);
+    var budgetCopy = templateFile.makeCopy(folderName + ' — Budget', preApprovalFolder);
+  } catch(err) {
+    Logger.log('Budget template copy failed: ' + err.toString());
+  }
+
+  return 'https://drive.google.com/drive/folders/' + eventFolder.getId();
+}
+
+// ── Create Overview Doc ───────────────────────────────────────────────────────
+function createOverviewDoc(folder, folderName, p) {
+  var doc = DocumentApp.create(folderName + ' — Overview');
+
+  // Move to PRE-APPROVAL folder
+  var file = DriveApp.getFileById(doc.getId());
+  folder.addFile(file);
+  DriveApp.getRootFolder().removeFile(file);
+
+  var body = doc.getBody();
+  body.clear();
+
+  // Title
+  var title = body.appendParagraph('EVENT OVERVIEW — ' + folderName);
+  title.setHeading(DocumentApp.ParagraphHeading.NORMAL);
+  title.editAsText().setBold(true).setFontSize(11).setFontFamily('Courier New');
+
+  body.appendParagraph(p.event_date + ' | Status: PRE-APPROVAL')
+    .editAsText().setFontFamily('Courier New').setFontSize(10);
+
+  appendSection(body, 'CLIENT');
+  appendLine(body, 'Name: ' + (p.name || ''));
+  appendLine(body, 'Email: ' + (p.email || ''));
+  appendLine(body, 'Phone: ' + (p.phone || ''));
+  appendLine(body, 'Connection: ' + (p.referral || ''));
+
+  appendSection(body, 'EVENT DETAILS');
+  appendLine(body, 'Date: ' + (p.event_date || ''));
+  appendLine(body, 'Time: ');
+  appendLine(body, 'Venue: ' + (p.venue || ''));
+  appendLine(body, 'Format: ' + (p.event_type || ''));
+  appendLine(body, 'Guest Count: ' + (p.guest_count || ''));
+  appendLine(body, 'Service Style: ' + (p.service_style || ''));
+
+  appendSection(body, 'DIETARY');
+  appendLine(body, p.dietary || '—');
+  if (p.dietary_other) appendLine(body, 'Other: ' + p.dietary_other);
+
+  appendSection(body, 'BUDGET NOTES');
+  appendLine(body, 'Budget Range: ' + (p.budget || '—'));
+  appendLine(body, 'Beverage Budget: ' + (p.beverage_budget || '—'));
+  appendLine(body, 'Beverage: ' + (p.beverage || '—'));
+
+  appendSection(body, 'OPEN QUESTIONS');
+  appendLine(body, '— Confirm venue');
+  appendLine(body, '— Confirm staffing needs');
+  appendLine(body, '— Confirm rentals');
+
+  appendSection(body, 'NOTES');
+  appendLine(body, p.notes || '—');
+  if (p.other_services) appendLine(body, 'Other services needed: ' + p.other_services);
+
+  appendSection(body, 'COMMUNICATIONS LOG');
+  appendLine(body, p.timestamp ? p.timestamp.split('T')[0] : new Date().toISOString().split('T')[0]);
+  appendLine(body, '— Initial inquiry received via website');
+
+  doc.saveAndClose();
+  return doc.getId();
+}
+
+function appendSection(body, label) {
+  var p = body.appendParagraph('\n' + label);
+  p.editAsText().setBold(true).setFontFamily('Courier New').setFontSize(10);
+}
+
+function appendLine(body, text) {
+  body.appendParagraph(text).editAsText().setBold(false).setFontFamily('Courier New').setFontSize(10);
 }
